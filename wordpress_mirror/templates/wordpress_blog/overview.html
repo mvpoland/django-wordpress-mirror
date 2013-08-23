@@ -1,0 +1,20 @@
+{% extends "wordpress_blog/base.html" %}
+{% load i18n markup %}
+
+{% block content %}
+
+{% for post in posts %}
+    {% include "wordpress_blog/inline_post.html" %}
+{% endfor %}
+
+<ul class="pager">
+    {% if page > "1" %}
+    <li><a id="prev" href="{% url wordpress_blog_overview page|add:"-1" %}">{% trans "More recent posts" %}</a></li>
+    {% endif %}
+    {% if page < max_pages %}
+    <li><a id="next" href="{% url wordpress_blog_overview page|add:"1" %}">{% trans "Older posts" %}</a></li>
+    {% endif %}
+</ul>
+
+
+{% endblock %}

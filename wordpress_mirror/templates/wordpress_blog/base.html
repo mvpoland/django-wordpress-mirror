@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block page_title %}{% trans "Blog" %} &mdash; {{ block.super }}{% endblock %}
+{% block title %}<a href="{% url wordpress_blog_overview %}">{% trans "Blog" %}</a>{% endblock %}
+
+{% block content %}
+{% endblock %}

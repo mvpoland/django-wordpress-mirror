@@ -1,0 +1,17 @@
+<article class="">
+    <header>
+        <h2><a href="{% url wordpress_blog_detail post.slug %}">{{ post.title }}</a></h2>
+        <span class="meta-data">
+            <time>{{ post.date|date:"d b Y" }}</time>
+            &nbsp;&mdash;&nbsp;
+            <a href="{% url wordpress_blog_detail post.slug %}#disqus_thread" class="comments">
+                {% if post.comment_count == 0 %}
+                No comments yet
+                {% else %}
+                    {{ post.comment_count }} comment{{ post.comment_count|pluralize }}
+                {% endif %}
+            </a>
+        </span>
+    </header>
+    {{ post.content|safe }}
+</article>
