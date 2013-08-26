@@ -16,22 +16,18 @@ To install wordpress\_mirror:
       wordpress\_mirror instance). The values are dictionaries containing the
       host name and the templates directory. For example:
 
-      ```python
-      WORDPRESS_MAPPING = {2: {'host': 'http://localhost/mvb_be',
-                               'templates': 'community/blog/',
-                               },
-                           7: {'host': 'http://localhost/mvb_nl',
-                               'templates': 'nl_community/blog/',
-                               },
-                           }
-      ```
+        WORDPRESS_MAPPING = {2: {'host': 'http://localhost/mvb_be',
+                                 'templates': 'community/blog/',
+                                 },
+                             7: {'host': 'http://localhost/mvb_nl',
+                                 'templates': 'nl_community/blog/',
+                                 },
+                             }
 
     - Add the wordpress\_mirror urls.py. If there are multiple instances of 
       the wordpress\_mirror app, you can use url namespaces:
 
-      ```python
-      url(r'^blog/', include('mvne.wordpress_mirror.urls', namespace='my_blog', app_name='wordpress_mirror')),
-      ```
+        url(r'^blog/', include('mvne.wordpress_mirror.urls', namespace='my_blog', app_name='wordpress_mirror')),
 
     - There need to be two templates in the template directory, *overview.html*
       and *detail.html*. Examples of these files can be found in 
