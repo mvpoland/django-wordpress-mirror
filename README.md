@@ -39,4 +39,4 @@ url(r'^blog/', include('mvne.wordpress_mirror.urls', namespace='my_blog', app_na
 
 Author
 ------
-- San Gillis <san.gillis@mobilevikings.com>
+San Gillis <san.gillis@mobilevikings.com>
