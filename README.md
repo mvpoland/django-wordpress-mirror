@@ -37,6 +37,9 @@ url(r'^blog/', include('mvne.wordpress_mirror.urls', namespace='my_blog', app_na
   and *detail.html*. Examples of these files can be found in 
   wordpress_mirror/templates/wordpress_mirror
 
+- The wordpress server needs to have the JSON API plugin installed
+  (http://wordpress.org/plugins/json-api/)
+
 Author
 ------
-San Gillis <san.gillis@mobilevikings.com>
+San Gillis (<san.gillis@mobilevikings.com>)
