@@ -9,12 +9,16 @@ from django.template.context import RequestContext
 import requests
 
 
-def overview(request, page='1', count='3'):
+def overview(request, page='1', count='4'):
     """
     Blog overview
     """
     mapping = settings.WORDPRESS_MAPPING
     site_id = Site.objects.get_current().id
+
+    # If it is the first page, we want one extra story, the latest one
+    if page == '1':
+        count = str(int(count) + 1)
 
     r = requests.get("%s?json=1&count=%s&page=%s" %
                      (mapping[site_id]['host'], count, page))
@@ -44,6 +48,10 @@ def permalink(request, post_id):
     r = requests.get("%s?json=get_post&post_id=%s" % (mapping[site_id]['host'],
                                                       post_id))
     json_data = json.loads(r.content)
+    # Change the date to a python datetime.datetime object
+    json_data['post']['date'] = \
+        datetime.datetime.strptime(json_data['post']['date'],
+                                   "%Y-%m-%d %H:%M:%S")
 
     context = {'json_data': json_data, }
 
@@ -62,6 +70,10 @@ def detail(request, slug):
     r = requests.get("%s?json=get_post&slug=%s" % (mapping[site_id]['host'],
                                                    slug))
     json_data = json.loads(r.content)
+    # Change the date to a python datetime.datetime object
+    json_data['post']['date'] = \
+        datetime.datetime.strptime(json_data['post']['date'],
+                                   "%Y-%m-%d %H:%M:%S")
 
     context = {'json_data': json_data, }
 
