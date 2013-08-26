@@ -37,5 +37,6 @@ url(r'^blog/', include('mvne.wordpress_mirror.urls', namespace='my_blog', app_na
   and *detail.html*. Examples of these files can be found in 
   wordpress_mirror/templates/wordpress_mirror
 
-# Author
+Author
+------
 - San Gillis <san.gillis@mobilevikings.com>
