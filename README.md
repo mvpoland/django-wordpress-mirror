@@ -30,7 +30,7 @@ WORDPRESS_MAPPING = {2: {'host': 'http://localhost/mvb_be',
   the wordpress_mirror app, you can use url namespaces:
 
 ```python
-url(r'^blog/', include('mvne.wordpress_mirror.urls', namespace='my_blog', app_name='wordpress_mirror')),
+url(r'^blog/', include('wordpress_mirror.urls', namespace='my_blog', app_name='wordpress_mirror')),
 ```
 
 - There need to be two templates in the template directory, *overview.html*
