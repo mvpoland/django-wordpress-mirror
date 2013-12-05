@@ -1,6 +1,6 @@
-from django.conf.urls.defaults import *
+from django.conf.urls import patterns, url
 
-from wordpress_mirror.views import *
+from wordpress_mirror.views import overview, permalink, detail
 
 urlpatterns = patterns('',
     url(r'^$', overview, name='wordpress_blog_overview'),
