@@ -43,8 +43,8 @@ class Post(object):
         return datetime.datetime.strptime(datestr, "%Y-%m-%d %H:%M:%S")
 
     @property
-    def date(self):
-        return self._parse_date(self.data.date)
+    def postdate(self):
+        return self._parse_date(self.data.get('date'))
 
     @property
     def share_url(self):
