@@ -69,6 +69,19 @@ class Post(object):
                 self._url_unlocalized = urlunparse(url_parsed)
         return self._url_unlocalized
 
+    def custom_images(self):
+        if self.data:
+            attachments = dict([(att.get('id'), att) for att in self.data.get('attachments', [])])
+            custom_images = {}
+            for cfname, cfdata in self.data.get('custom_fields', {}).iteritems():
+                if 0 < len(cfdata):
+                    try:
+                        if int(cfdata[0]) in attachments:
+                            custom_images[cfname] = attachments[int(cfdata[0])]
+                    except ValueError:
+                        pass
+            return custom_images
+
 def get_posts(wp_path='/', wp_query=None, lang=None, country=None):
     # TODO: Caching
     mapping = settings.WORDPRESS_MAPPING
