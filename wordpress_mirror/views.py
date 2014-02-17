@@ -98,7 +98,6 @@ def mirror(request, wp_path='/'):
     get_params = dict(request.GET.iteritems())
     api_response = get_posts(wp_path, get_params, lang=getattr(request, 'LANGUAGE_LANG', None), country=getattr(request, 'LANGUAGE_COUNTRY', None))
     context = api_response
-    print api_response
 
     if api_response.get('status') == 'ok':
         template = 'archive.html'
