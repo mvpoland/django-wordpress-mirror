@@ -129,6 +129,10 @@ def mirror(request, wp_path='/'):
             if cur_page < max_pages:
                 cur_params['page'] = cur_page + 1
                 context['older_posts_page'] = request.path + '?' + cur_params.urlencode()
+        if 's' in get_params:
+            context['search_string'] = get_params['s']
+        if 'count_total' in api_response:
+            context['nr_posts'] = api_response['count_total']
 
         return render_to_response(
             mapping[site_id]['templates'] + template,
