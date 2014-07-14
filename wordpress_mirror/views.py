@@ -1,6 +1,6 @@
 import datetime
+import simplejson as json
 
-from django.utils import simplejson as json
 from django.contrib.sites.models import Site
 from django.conf import settings
 from django.shortcuts import render_to_response
