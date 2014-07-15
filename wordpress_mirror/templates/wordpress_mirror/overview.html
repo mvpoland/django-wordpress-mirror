@@ -1,5 +1,6 @@
 {% extends "wordpress_blog/base.html" %}
 {% load i18n %}
+{% load url from future %}
 
 {% block content %}
 
@@ -9,10 +10,10 @@
 
 <ul class="pager">
     {% if page > "1" %}
-    <li><a id="prev" href="{% url wordpress_blog_overview page|add:"-1" %}">{% trans "More recent posts" %}</a></li>
+    <li><a id="prev" href="{% url 'wordpress_blog_overview' page|add:"-1" %}">{% trans "More recent posts" %}</a></li>
     {% endif %}
     {% if page < max_pages %}
-    <li><a id="next" href="{% url wordpress_blog_overview page|add:"1" %}">{% trans "Older posts" %}</a></li>
+    <li><a id="next" href="{% url 'wordpress_blog_overview' page|add:"1" %}">{% trans "Older posts" %}</a></li>
     {% endif %}
 </ul>
 
