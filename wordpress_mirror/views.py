@@ -1,6 +1,7 @@
 import datetime
 import simplejson as json
 
+from django.core.cache import cache
 from django.contrib.sites.models import Site
 from django.conf import settings
 from django.shortcuts import render_to_response
@@ -84,7 +85,7 @@ class Post(object):
             return custom_images
 
 
-def get_posts(wp_path='/', wp_query=None, lang=None, country=None):
+def get_posts(wp_path='/', wp_query=None, lang=None, country=None, authenticate=False):
     # TODO: Caching
     mapping = settings.WORDPRESS_MAPPING
     site_id = Site.objects.get_current().id
@@ -93,11 +94,35 @@ def get_posts(wp_path='/', wp_query=None, lang=None, country=None):
         wp_query = {}
     wp_query['json'] = 1
 
+    if wp_path == '/' and authenticate and wp_query.get('p', None):  # when we want to preview posts from WP we need to do a bit of magic
+        wp_query['json'] = 'get_post'
+        wp_query['id'] = wp_query.pop('p')
+
     parsed_url = list(urlparse(urljoin(mapping[site_id]['host'], wp_path)))
     parsed_url[4] = urlencode(wp_query)
-
-    r = requests.get(urlunparse(parsed_url),
-                     timeout=REQUEST_TIMEOUT_SEC)
+    cookies = None
+    s = requests.Session()
+    if authenticate:
+        cookies = cache.get(settings.WORDPRESS_COOKIES_KEY)
+        if not cookies:
+            mapping = settings.WORDPRESS_MAPPING
+            site_id = Site.objects.get_current().id
+            url = urljoin(mapping[site_id]['host'], "wp-login.php")
+            post_data = {
+                'log': settings.WORDPRESS_USERNAME,
+                'pwd': settings.WORDPRESS_PASSWORD,
+                'rememberme': 'forever'
+            }
+            s.get(urljoin(mapping[site_id]['host'], "wp-admin"))
+            response = s.post(url,
+                     timeout=REQUEST_TIMEOUT_SEC,
+                     cookies=cookies,
+                     data=post_data)
+            cookies = s.cookies.get_dict()
+            cache.set(settings.WORDPRESS_COOKIES_KEY, cookies, 60*60*24) # 24 hours
+    r = s.get(urlunparse(parsed_url),
+                     timeout=REQUEST_TIMEOUT_SEC,
+                     cookies=cookies)
     json_data = json.loads(r.content)
     if 'post' in json_data:
         json_data['post'] = Post(json_data['post'], lang, country)
@@ -112,7 +137,8 @@ def mirror(request, wp_path='/'):
     site_id = Site.objects.get_current().id
 
     get_params = dict(request.GET.iteritems())
-    api_response = get_posts(wp_path, get_params, lang=getattr(request, 'LANGUAGE_LANG', None), country=getattr(request, 'LANGUAGE_COUNTRY', None))
+    authenticate = request.user.is_authenticated() and request.user.is_staff
+    api_response = get_posts(wp_path, get_params, lang=getattr(request, 'LANGUAGE_LANG', None), country=getattr(request, 'LANGUAGE_COUNTRY', None), authenticate=authenticate)
     context = api_response
 
     if api_response.get('status') == 'ok':
