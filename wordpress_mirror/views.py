@@ -123,6 +123,8 @@ def get_posts(wp_path='/', wp_query=None, lang=None, country=None, authenticate=
     r = s.get(urlunparse(parsed_url),
                      timeout=REQUEST_TIMEOUT_SEC,
                      cookies=cookies)
+    if r.status_code != 200:
+        return {}
     json_data = json.loads(r.content)
     if 'post' in json_data:
         json_data['post'] = Post(json_data['post'], lang, country)
