@@ -150,11 +150,11 @@ def mirror(request, wp_path='/'):
         if 'pages' in api_response:
             max_pages = api_response['pages']
 
-            # Default to page 1 if no valid page ID was set
+            # If no valid numeric page ID is set, raise a 404.
             try:
                 cur_page = int(request.GET.get('page', 1))
             except ValueError:
-                cur_page = 1
+                raise Http404
 
             cur_params = request.GET.copy()
             if cur_page > 1:
