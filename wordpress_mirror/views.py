@@ -149,7 +149,13 @@ def mirror(request, wp_path='/'):
             template = 'single.html'
         if 'pages' in api_response:
             max_pages = api_response['pages']
-            cur_page = int(request.GET.get('page', 1))
+
+            # Default to page 1 if no valid page ID was set
+            try:
+                cur_page = int(request.GET.get('page', 1))
+            except ValueError:
+                cur_page = 1
+
             cur_params = request.GET.copy()
             if cur_page > 1:
                 cur_params['page'] = cur_page - 1
