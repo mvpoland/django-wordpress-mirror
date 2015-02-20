@@ -1,4 +1,5 @@
 import datetime
+import re
 import simplejson as json
 
 from django.core.cache import cache
@@ -85,10 +86,26 @@ class Post(object):
             return custom_images
 
 
+def allowed_path(path):
+    """
+    Check whether a path is allowed by the WORDPRESS_ALLOWED_PATHS setting.
+    """
+    allowed_paths = getattr(settings, 'WORDPRESS_ALLOWED_PATHS', None)
+
+    # If the setting is not defined, all paths are allowable
+    if not allowed_paths:
+        return True
+
+    return any(re.match(p, path) for p in allowed_paths)
+
+
 def get_posts(wp_path='/', wp_query=None, lang=None, country=None, authenticate=False):
     # TODO: Caching
     mapping = settings.WORDPRESS_MAPPING
     site_id = Site.objects.get_current().id
+
+    if not allowed_path(wp_path):
+        return {}
 
     if not wp_query:
         wp_query = {}
