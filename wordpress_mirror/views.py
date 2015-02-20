@@ -94,7 +94,8 @@ def get_posts(wp_path='/', wp_query=None, lang=None, country=None, authenticate=
         wp_query = {}
     wp_query['json'] = 1
 
-    if wp_path == '/' and authenticate and wp_query.get('p', None):  # when we want to preview posts from WP we need to do a bit of magic
+    # when we want to preview posts from WP we need to do a bit of magic
+    if wp_path == '/' and authenticate and wp_query.get('p', None):
         wp_query['json'] = 'get_post'
         wp_query['id'] = wp_query.pop('p')
 
@@ -114,10 +115,10 @@ def get_posts(wp_path='/', wp_query=None, lang=None, country=None, authenticate=
                 'rememberme': 'forever'
             }
             s.get(urljoin(mapping[site_id]['host'], "wp-admin"))
-            response = s.post(url,
-                     timeout=REQUEST_TIMEOUT_SEC,
-                     cookies=cookies,
-                     data=post_data)
+            s.post(url,
+                   timeout=REQUEST_TIMEOUT_SEC,
+                   cookies=cookies,
+                   data=post_data)
             cookies = s.cookies.get_dict()
             cache.set(settings.WORDPRESS_COOKIES_KEY, cookies, 60*60*24) # 24 hours
     r = s.get(urlunparse(parsed_url),
@@ -140,7 +141,8 @@ def mirror(request, wp_path='/'):
 
     get_params = dict(request.GET.iteritems())
     authenticate = request.user.is_authenticated() and request.user.is_staff
-    api_response = get_posts(wp_path, get_params, lang=getattr(request, 'LANGUAGE_LANG', None), country=getattr(request, 'LANGUAGE_COUNTRY', None), authenticate=authenticate)
+    api_response = get_posts(wp_path, get_params, lang=getattr(request, 'LANGUAGE_LANG', None),
+            country=getattr(request, 'LANGUAGE_COUNTRY', None), authenticate=authenticate)
     context = api_response
 
     if api_response.get('status') == 'ok':
