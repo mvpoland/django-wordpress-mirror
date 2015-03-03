@@ -1,6 +1,6 @@
 import datetime
 import re
-import simplejson as json
+import json
 
 from django.core.cache import cache
 from django.contrib.sites.models import Site
