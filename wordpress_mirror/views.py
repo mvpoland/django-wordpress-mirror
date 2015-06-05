@@ -59,17 +59,15 @@ class Post(object):
         if not self._url_localized:
             if self.data:
                 url_parsed = list(urlparse(self.data['url']))
-                url_parsed[2] = sitelanguage().locale_url(url_parsed[2], self.lang)
-                self._url_localized = urlunparse(url_parsed)
+                wp_path = url_parsed[2] if url_parsed[2][0] != '/' else url_parsed[2][1:]
+                url = sitelanguage().reverse('wordpress_blog_mirror_path', args=(wp_path,))
+                self._url_localized = url
         return self._url_localized
 
     @property
     def url_unlocalized(self):
         if not self._url_unlocalized:
-            if self.data:
-                url_parsed = list(urlparse(self.data['url']))
-                url_parsed[2] = sitelanguage().path_without_locale(url_parsed[2])
-                self._url_unlocalized = urlunparse(url_parsed)
+            self.url_unlocalized = sitelanguage().path_without_locale(self.url_localized)
         return self._url_unlocalized
 
     def custom_images(self):
